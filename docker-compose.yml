@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  sc-db:
+    image: postgres:13
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secure-password
+      POSTGRES_DB: secure-coding
