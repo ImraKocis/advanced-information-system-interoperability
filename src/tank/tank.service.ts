@@ -23,31 +23,43 @@ export class TankService {
   }
 
   async getById(id: string): Promise<Tank> {
-    return this.prisma.tank.findUnique({
-      where: { id: Number(id) },
-    });
+    try {
+      return this.prisma.tank.findUnique({
+        where: { id: Number(id) },
+      });
+    } catch {
+      return null;
+    }
   }
 
-  async update(id: string, data: UpdateTankDto): Promise<Tank> {
-    return this.prisma.tank.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        name: data.name,
-        hitpoints: data.hitpoints,
-        numofcrew: data.numofcrew,
-        nation: data.nation,
-      },
-    });
+  async update(id: string, data: UpdateTankDto): Promise<Tank | null> {
+    try {
+      return this.prisma.tank.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          name: data.name,
+          hitpoints: data.hitpoints,
+          numofcrew: data.numofcrew,
+          nation: data.nation,
+        },
+      });
+    } catch {
+      return null;
+    }
   }
 
-  async delete(id: string): Promise<Tank> {
-    return this.prisma.tank.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+  async delete(id: string): Promise<Tank | null> {
+    try {
+      return this.prisma.tank.delete({
+        where: {
+          id: Number(id),
+        },
+      });
+    } catch (e) {
+      return null;
+    }
   }
 
   async createMany(data: CreateTankDto[]): Promise<Prisma.BatchPayload> {
@@ -60,5 +72,12 @@ export class TankService {
         type: tank.type,
       })),
     });
+  }
+
+  async getByName(name: string): Promise<Tank[]> {
+    const result: Tank[] = await this.prisma
+      .$queryRaw`SELECT * FROM Tank WHERE name = '${name}'`;
+
+    return result;
   }
 }

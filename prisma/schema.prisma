@@ -20,6 +20,7 @@ model User {
   email     String   @unique
   hash      String
   hashedRt  String?
+  tanks     Tank[]
 
   @@map("users")
 }
@@ -33,6 +34,8 @@ model Tank {
   hitpoints Int
   numofcrew Int
   type      TankType?
+  User      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?
 
   @@map("tanks")
 }
