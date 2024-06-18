@@ -1,6 +1,8 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Public } from '../common/decorators';
+import { safeDeserialize } from '../common/sterilization';
+import { User } from './entities';
 
 @Controller('user')
 export class UserController {
@@ -22,5 +24,12 @@ export class UserController {
     @Query('tankId') tankId: string,
   ) {
     return this.userService.removeTankFromUser(Number(userId), Number(tankId));
+  }
+
+  @Public()
+  @Get()
+  async findAll() {
+    const users = await this.userService.findAll();
+    return users.map((user) => safeDeserialize(User, user));
   }
 }

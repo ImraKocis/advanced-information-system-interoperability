@@ -38,3 +38,4 @@ lerna-debug.log*
 /prisma/migrations/
 /.scannerwork/.sonar_lock
 /.scannerwork/report-task.txt
+/.scannerwork/scanner-report/

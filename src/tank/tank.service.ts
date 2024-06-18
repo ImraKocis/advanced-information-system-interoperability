@@ -75,8 +75,9 @@ export class TankService {
   }
 
   async getByName(name: string): Promise<Tank[]> {
-    const result: Tank[] = await this.prisma
-      .$queryRaw`SELECT * FROM Tank WHERE name = '${name}'`;
+    const result: Tank[] = await this.prisma.$queryRawUnsafe(
+      `SELECT * FROM Tanks WHERE name = '${name}'`,
+    );
 
     return result;
   }

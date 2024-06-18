@@ -6,13 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { TankService } from './tank.service';
 import { Tank } from '@prisma/client';
 import { CreateTankDto, UpdateTankDto } from './dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { tanks } from './mock';
-// import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 import { TankEntity } from './entities';
 
 @ApiTags('Tanks')
@@ -20,7 +21,7 @@ import { TankEntity } from './entities';
 export class TankController {
   constructor(private readonly tankService: TankService) {}
 
-  // @Public()
+  @Public()
   @Get()
   @ApiResponse({
     status: 200,
@@ -37,7 +38,7 @@ export class TankController {
     return this.tankService.create(data);
   }
 
-  @Get(':id')
+  @Get('find/:id')
   async getById(@Param('id') id: string): Promise<Tank> {
     return this.tankService.getById(id);
   }
@@ -54,14 +55,15 @@ export class TankController {
     return this.tankService.delete(id);
   }
 
-  // @Public()
+  @Public()
   @Post('create-initial')
   async createInitial(): Promise<void> {
     await this.tankService.createMany(tanks);
   }
 
-  @Get('name/:name')
-  async getByName(@Param('name') name: string): Promise<Tank[]> {
+  @Public()
+  @Get('by-name')
+  async getByName(@Query('name') name: string): Promise<Tank[]> {
     return this.tankService.getByName(name);
   }
 }
