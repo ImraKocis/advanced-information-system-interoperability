@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  hash      String
-  hashedRt  String?
-  tanks     Tank[]
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  email            String   @unique
+  hash             String
+  hashedRt         String?
+  tanks            Tank[]
+  numberOfAttempts Int      @default(0)
 
   @@map("users")
 }

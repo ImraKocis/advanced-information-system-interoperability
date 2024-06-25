@@ -48,9 +48,35 @@ export class AuthService {
     });
 
     if (!user) throw new ForbiddenException('Access Denied');
+    // Check if user has attempted to log in more than 5 times
+    if (user.numberOfAttempts >= 5) {
+      throw new ForbiddenException('Access Denied');
+    }
 
     const passwordMatches = await argon.verify(user.hash, dto.password);
-    if (!passwordMatches) throw new ForbiddenException('Access Denied');
+    if (!passwordMatches) {
+      // Increment number of attempts if login fails
+      await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          numberOfAttempts: {
+            increment: 1,
+          },
+        },
+      });
+      throw new ForbiddenException('Access Denied');
+    }
+    // Reset number of attempts if login is successful
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        numberOfAttempts: 0,
+      },
+    });
 
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateRtHash(user.id, tokens.refresh_token);
