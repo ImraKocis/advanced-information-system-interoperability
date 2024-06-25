@@ -33,7 +33,7 @@ export class UpdateTankDto {
     maximum: 3500,
     example: 1500,
   })
-  hitpoints?: number;
+  hitpoints?: string;
 
   @Type(() => Number)
   @IsInt()
@@ -47,7 +47,7 @@ export class UpdateTankDto {
     minimum: 1,
     example: 5,
   })
-  numofcrew?: number;
+  numofcrew?: string;
 
   @IsString()
   @IsOptional()
@@ -91,7 +91,7 @@ export class CreateTankDto {
     maximum: 3500,
     example: 1500,
   })
-  hitpoints: number;
+  hitpoints: string;
 
   @Type(() => Number)
   @IsInt()
@@ -105,7 +105,7 @@ export class CreateTankDto {
     minimum: 1,
     example: 5,
   })
-  numofcrew: number;
+  numofcrew: string;
 
   @IsString()
   @IsNotEmpty()

@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { TankService } from './tank.service';
 import { Tank } from '@prisma/client';
@@ -15,6 +14,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { tanks } from './mock';
 import { Public } from 'src/common/decorators/public.decorator';
 import { TankEntity } from './entities';
+import { safeDeserialize, SerializationService } from '../common/sterilization';
 
 @ApiTags('Tanks')
 @Controller('tanks')
@@ -29,13 +29,16 @@ export class TankController {
     isArray: true,
     type: TankEntity,
   })
-  async getAll(): Promise<Tank[]> {
-    return this.tankService.getAll();
+  async getAll(): Promise<object[]> {
+    const tanks = await this.tankService.getAll();
+    return tanks.map((tank) => SerializationService.serialize(tank));
   }
 
+  @Public()
   @Post()
   async create(@Body() data: CreateTankDto): Promise<Tank> {
-    return this.tankService.create(data);
+    const tank = safeDeserialize(TankEntity, data);
+    return this.tankService.create(tank);
   }
 
   @Get('find/:id')

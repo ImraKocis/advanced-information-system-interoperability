@@ -2,18 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Tank } from '@prisma/client';
 import { CreateTankDto, UpdateTankDto } from './dto';
+import { TankEntity } from './entities';
 
 @Injectable()
 export class TankService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateTankDto): Promise<Tank> {
+  async create(data: TankEntity): Promise<Tank> {
     return this.prisma.tank.create({
       data: {
         name: data.name,
-        hitpoints: data.hitpoints,
-        numofcrew: data.numofcrew,
+        hitpoints: Number(data.hitpoints),
+        numofcrew: Number(data.numofcrew),
         nation: data.nation,
+        type: data.type,
       },
     });
   }
@@ -40,8 +42,8 @@ export class TankService {
         },
         data: {
           name: data.name,
-          hitpoints: data.hitpoints,
-          numofcrew: data.numofcrew,
+          hitpoints: Number(data.hitpoints),
+          numofcrew: Number(data.numofcrew),
           nation: data.nation,
         },
       });
@@ -62,12 +64,12 @@ export class TankService {
     }
   }
 
-  async createMany(data: CreateTankDto[]): Promise<Prisma.BatchPayload> {
+  async createMany(data: any[]): Promise<Prisma.BatchPayload> {
     return this.prisma.tank.createMany({
       data: data.map((tank) => ({
         name: tank.name,
-        hitpoints: tank.hitpoints,
-        numofcrew: tank.numofcrew,
+        hitpoints: Number(tank.hitpoints),
+        numofcrew: Number(tank.numofcrew),
         nation: tank.nation,
         type: tank.type,
       })),

@@ -1,37 +1,30 @@
 import { TankType } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Transform } from 'class-transformer';
 
 export class TankEntity {
-  @ApiProperty({
-    example: 1,
-  })
+  @Expose()
   id: number;
-  @ApiProperty({
-    example: new Date(),
-  })
+
+  @Expose()
+  @Transform(({ value }) => value.toISOString(), { toPlainOnly: true })
   createdAt: Date;
-  @ApiProperty({
-    example: new Date(),
-  })
+
+  @Expose()
+  @Transform(({ value }) => value.toISOString(), { toPlainOnly: true })
   updatedAt: Date;
-  @ApiProperty({
-    example: 'M1 Abrams',
-  })
+
+  @Expose()
   name: string;
-  @ApiProperty({
-    example: 'USA',
-  })
+
+  @Expose()
   nation: string;
-  @ApiProperty({
-    example: 1500,
-  })
+
+  @Expose()
   hitpoints: number;
-  @ApiProperty({
-    example: 5,
-  })
+
+  @Expose()
   numofcrew: number;
-  @ApiProperty({
-    example: 'HEAVY_TANK',
-  })
+
+  @Expose()
   type: TankType;
 }
