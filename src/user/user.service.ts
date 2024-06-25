@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
 import { UserTanks } from './types';
 
 @Injectable()
@@ -23,6 +22,7 @@ export class UserService {
           id: true,
           email: true,
           tanks: true,
+          createdAt: true,
         },
       });
     } catch {
@@ -46,6 +46,7 @@ export class UserService {
           id: true,
           email: true,
           tanks: true,
+          createdAt: true,
         },
       });
     } catch {
@@ -53,7 +54,14 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+  async findAll(): Promise<UserTanks[]> {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        tanks: true,
+        createdAt: true,
+      },
+    });
   }
 }

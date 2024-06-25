@@ -61,9 +61,9 @@ export class TankController {
     await this.tankService.createMany(tanks);
   }
 
-  @Public()
-  @Get('by-name')
-  async getByName(@Query('name') name: string): Promise<Tank[]> {
-    return this.tankService.getByName(name);
-  }
+  // @Public()
+  // @Get('by-name')
+  // async getByName(@Query('name') name: string): Promise<Tank[]> {
+  //   return this.tankService.getByName(name);
+  // }
 }

@@ -8,6 +8,11 @@ import { User } from './entities';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('me')
+  async getUser(@GetCurrentUser() user: User) {
+    return user;
+  }
+
   @Public()
   @Post('add-tank')
   async addTankToUser(

@@ -74,11 +74,11 @@ export class TankService {
     });
   }
 
-  async getByName(name: string): Promise<Tank[]> {
-    const result: Tank[] = await this.prisma.$queryRawUnsafe(
-      `SELECT * FROM Tanks WHERE name = '${name}'`,
-    );
-
-    return result;
-  }
+  // async getByName(name: string): Promise<Tank[]> {
+  //   const result: Tank[] = await this.prisma.$queryRawUnsafe(
+  //     `SELECT * FROM Tanks WHERE name = '${name}'`,
+  //   );
+  //
+  //   return result;
+  // }
 }
