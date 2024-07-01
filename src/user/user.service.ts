@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserTanks } from './types';
 
@@ -10,6 +10,14 @@ export class UserService {
     userId: number,
     tankId: number,
   ): Promise<UserTanks | null> {
+    const currentTank = await this.prisma.tank.findUnique({
+      where: { id: tankId },
+    });
+
+    if (!currentTank) return null;
+    // Tank is already assigned to a user
+    if (currentTank.userId)
+      throw new ForbiddenException('Tank already assigned');
     try {
       return this.prisma.user.update({
         where: { id: userId },
