@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Tank } from '@prisma/client';
-import { CreateTankDto, UpdateTankDto } from './dto';
+import { UpdateTankDto } from './dto';
 import { TankEntity } from './entities';
 
 @Injectable()
@@ -75,12 +75,4 @@ export class TankService {
       })),
     });
   }
-
-  // async getByName(name: string): Promise<Tank[]> {
-  //   const result: Tank[] = await this.prisma.$queryRawUnsafe(
-  //     `SELECT * FROM Tanks WHERE name = '${name}'`,
-  //   );
-  //
-  //   return result;
-  // }
 }

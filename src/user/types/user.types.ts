@@ -6,3 +6,10 @@ export interface UserTanks {
   createdAt: Date;
   tanks: Tank[];
 }
+
+export interface UserTanksExtended {
+  id: number;
+  createdAt: Date;
+  email: string;
+  tanks: Tank[];
+}
