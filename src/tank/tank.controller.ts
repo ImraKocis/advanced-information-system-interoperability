@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { TankService } from './tank.service';
 import { Tank } from '@prisma/client';
@@ -46,13 +46,14 @@ export class TankController {
     return this.tankService.getById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() data: UpdateTankDto,
   ): Promise<Tank> {
     return this.tankService.update(id, data);
   }
+
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Tank> {
     return this.tankService.delete(id);
@@ -63,10 +64,4 @@ export class TankController {
   async createInitial(): Promise<void> {
     await this.tankService.createMany(tanks);
   }
-
-  // @Public()
-  // @Get('by-name')
-  // async getByName(@Query('name') name: string): Promise<Tank[]> {
-  //   return this.tankService.getByName(name);
-  // }
 }
