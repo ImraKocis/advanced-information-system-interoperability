@@ -37,31 +37,43 @@ export class TankController {
   @Public()
   @Post()
   async create(@Body() data: CreateTankDto): Promise<Tank> {
-    const tank = safeDeserialize(TankEntity, data);
-    return this.tankService.create(tank);
+    return this.tankService.create(data);
   }
 
+  @Public()
   @Get('find/:id')
   async getById(@Param('id') id: string): Promise<Tank> {
     return this.tankService.getById(id);
   }
 
+  @Public()
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() data: UpdateTankDto,
   ): Promise<Tank> {
+    console.log('data:', data);
+    console.log('id:', id);
     return this.tankService.update(id, data);
   }
 
+  @Public()
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<Tank> {
-    return this.tankService.delete(id);
+  async delete(@Param('id') id: string): Promise<any> {
+    // TODO: Implement delete method for RabbitMQ
+    // return this.tankService.delete(id);
+    return 'Tank deleted successfully!';
   }
 
   @Public()
   @Post('create-initial')
   async createInitial(): Promise<void> {
     await this.tankService.createMany(tanks);
+  }
+
+  @Public()
+  @Get('first')
+  async getFirst(): Promise<Tank> {
+    return this.tankService.getFirst();
   }
 }

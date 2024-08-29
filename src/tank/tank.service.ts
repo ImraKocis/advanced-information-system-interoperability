@@ -1,23 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Tank } from '@prisma/client';
-import { UpdateTankDto } from './dto';
-import { TankEntity } from './entities';
+import { ClientProxy } from '@nestjs/microservices';
+import { CreateTankDto, UpdateTankDto } from './dto';
 
 @Injectable()
 export class TankService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject('TANK_SERVICE') private rabbitClient: ClientProxy,
+    private prisma: PrismaService,
+  ) {}
 
-  async create(data: TankEntity): Promise<Tank> {
-    return this.prisma.tank.create({
+  async create(data: CreateTankDto): Promise<Tank> {
+    const newTank = await this.prisma.tank.create({
       data: {
         name: data.name,
         hitpoints: Number(data.hitpoints),
         numofcrew: Number(data.numofcrew),
-        nation: data.nation,
-        type: data.type,
+        nation: data.nation ?? 'USA',
+        type: data.type ?? 'HEAVY_TANK',
       },
     });
+
+    this.rabbitClient.emit('new-tank', newTank);
+
+    return newTank;
   }
 
   async getAll(): Promise<Tank[]> {
@@ -26,9 +33,11 @@ export class TankService {
 
   async getById(id: string): Promise<Tank> {
     try {
-      return this.prisma.tank.findUnique({
+      const tank = await this.prisma.tank.findUnique({
         where: { id: Number(id) },
       });
+      this.rabbitClient.emit('get-tank', tank);
+      return tank;
     } catch {
       return null;
     }
@@ -36,29 +45,35 @@ export class TankService {
 
   async update(id: string, data: UpdateTankDto): Promise<Tank | null> {
     try {
-      return this.prisma.tank.update({
+      const tank = await this.prisma.tank.update({
         where: {
           id: Number(id),
         },
         data: {
-          name: data.name,
-          hitpoints: Number(data.hitpoints),
-          numofcrew: Number(data.numofcrew),
-          nation: data.nation,
+          name: data.name || undefined,
+          hitpoints: Number(data.hitpoints) || undefined,
+          numofcrew: Number(data.numofcrew) || undefined,
+          nation: data.nation || undefined,
+          type: data.type || undefined,
         },
       });
-    } catch {
+      // this.rabbitClient.emit('update-tank', tank);
+      return tank;
+    } catch (e) {
+      console.log(e);
       return null;
     }
   }
 
   async delete(id: string): Promise<Tank | null> {
     try {
-      return this.prisma.tank.delete({
+      const tank = await this.prisma.tank.delete({
         where: {
           id: Number(id),
         },
       });
+      this.rabbitClient.emit('delete-tank', tank);
+      return tank;
     } catch (e) {
       return null;
     }
@@ -74,5 +89,9 @@ export class TankService {
         type: tank.type,
       })),
     });
+  }
+
+  async getFirst(): Promise<Tank> {
+    return this.prisma.tank.findFirst();
   }
 }
