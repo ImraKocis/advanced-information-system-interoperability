@@ -29,6 +29,7 @@ Start secure-codding REST API application
 
 - jBPM run Docker Image
 - http://localhost:8080/business-central
+- wbadmin user and pass
 - Design -> AISI-PA -> {Business Process} 
   - To look into business process
 - Menu -> Process Definitions -> {Business Process} -> Three dots -> Start -> Submit
